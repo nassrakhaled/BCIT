@@ -1,0 +1,108 @@
+-- EX. 8.1
+SELECT	  SUBSTRING(t.title,1,30)		AS	Title,
+	  s.ord_num				AS	OrderNumber,
+	  CONVERT(CHAR(12),s.ord_date,109)	AS	OrderDate,
+	  st.stor_name			AS	StoreName
+FROM	  titles t
+LEFT JOIN sales s   				ON	s.title_id = t.title_id
+LEFT JOIN stores st 				ON	s.stor_id = st.stor_id
+ORDER BY  s.ord_num;
+
+
+-- EX. 8.2
+SELECT	title_id,
+	title,
+	price,
+	pub_id,
+	pubdate
+INTO	business_books
+FROM	titles
+WHERE	type = 'business';
+
+
+-- EX. 8.3
+SELECT		p.pub_name			AS	PublisherName,
+		t.type				AS	Type,
+		MIN(t.price)			AS	MinPrice,
+		SUM(s.qty)			AS	Qty
+FROM		titles t			
+INNER JOIN	sales s			ON	t.title_id = s.title_id
+INNER JOIN	publishers p			ON	t.pub_id = p.pub_id
+GROUP BY	t.type,
+		p.pub_name;
+
+
+-- EX. 8.4
+SELECT	title_id				AS	TitleID,
+	ytd_sales				AS	YTDSales,
+	price					AS	Price,
+	CONVERT(DECIMAL(5,2),(price*1.15))	AS	NewPrice
+FROM	titles
+WHERE	ytd_sales < 2500
+UNION
+SELECT	title_id,				
+	ytd_sales,			
+	price,					
+	CONVERT(DECIMAL(5,2),(price*1.10))	
+FROM	titles
+WHERE	ytd_sales BETWEEN 2500 AND 10000
+UNION
+SELECT	title_id,			
+	ytd_sales,				
+	price,					
+	CONVERT(DECIMAL(5,2),(price*1.05)),
+FROM	titles
+WHERE	ytd_sales > 10000
+ORDER BY title_id;
+-- EX. 8.5
+SELECT	type					AS	Type,
+	AVG(price)				AS	Average,
+	SUM(price)				AS	Sum
+FROM	titles
+WHERE	price	 IS NOT NULL
+GROUP BY type	 WITH ROLLUP;
+
+
+-- EX. 8.6
+SELECT	    st.stor_id			AS	StoreID,
+	    st.stor_name			AS	StoreName,
+	    SUM(s.qty*t.price)		AS	Cost
+FROM	    stores st
+INNER JOIN sales s				ON	st.stor_id = s.stor_id
+INNER JOIN titles t				ON	s.title_id = t.title_id
+GROUP BY   st.stor_id,
+    st.stor_name
+HAVING	    SUM(s.qty*t.price) BETWEEN 500 AND 1500;
+
+
+-- EX. 8.7
+SELECT	     s.stor_id			AS	StoreID,
+	     SUM(s.qty)			AS	Qty,
+	     MIN(t.price)			AS	Min
+FROM	     sales s			
+INNER JOIN  titles t				ON	s.title_id = t.title_id
+GROUP BY    s.stor_id WITH ROLLUP;
+
+-- EX. 8.8
+INSERT INTO	titles
+(		title_id, 
+		title, 
+		type, 
+		pub_id, 
+		price, 
+		pubdate)
+VALUES
+(		'ZZ1234', 
+		'Microsoft SQL Server', 
+		'computer', 
+		'0877', 
+		89.99,
+		'Sep 29 2008');
+-- EX. 8.9
+UPDATE	titles
+SET	price = (price * 1.10)
+WHERE	title_id = 'ZZ1234';
+
+-- EX. 8.10
+DELETE	FROM	titles
+WHERE	title_id = 'ZZ1234';
