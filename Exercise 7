@@ -1,0 +1,78 @@
+-- EX. 7.1
+SELECT title_id,
+   	title,
+   	type,
+   	price
+FROM   titles
+WHERE  notes IS NOT NULL
+ORDER BY title_id;
+
+-- EX. 7.2
+SELECT DISTINCT stor_id
+FROM sales
+WHERE ord_date = 'Sep 14 1994';
+
+-- EX. 7.3
+SELECT (au_fname + ' ' + au_lname)                                           AS Name,
+   	'(' + SUBSTRING(phone,1,3) + ')' + SUBSTRING(phone,4,9)               AS phone,
+   	state                                                                 AS state
+FROM   authors
+ORDER BY Name;
+
+--EX. 7.4
+SELECT title_id                                    	AS TitleID,
+         SUBSTRING(title,1,30)                	AS Title,
+         advance                              	AS Advance,
+      	  ytd_sales                            	AS YTDSales,
+         CONVERT(CHAR(12),pubdate,105) 	   	AS PubDate
+FROM     titles
+WHERE    advance>= 3000
+   	AND (pubdate = 'Jun 9 1991' OR pubdate = 'Jun 12 1991')
+ORDER BY TITLE;
+--EX. 7.6
+SELECT author_id       	AS AuthorID,
+          	 (author_fname + ' ' + author_lname)               	AS Name,
+          	 phone                                             	AS phone,
+          	 city                                              	AS City,
+          	 zip                                               	AS Zip
+FROM   authors
+WHERE  city IN ('Oakland', 'San Francisco', 'Berkeley')
+   	AND  zip  IN ('94609' , '94130' , '94705')
+ORDER BY Name;
+
+--EX. 7.7
+SELECT  *
+FROM    roysched
+WHERE   royalty BETWEEN 15 AND 20
+ORDER BY title_id;
+
+--EX. 7.8
+SELECT emp_id                                            	   	AS EmpID,
+   	 fname                                      	   	   	AS FirstName,
+   	 lname                                      	          	AS LastName,
+   	 job_id                                            	   	AS JobID,
+   	 CONVERT(CHAR(12),hire_date,109)                         	AS HireDate
+FROM   employee
+WHERE  (lname LIKE 'A%' OR lname LIKE'S%')
+   	AND	 hire_date >= 'Jan 1 1990'
+ORDER BY lname;
+
+-- EX. 7.9
+SELECT   stor_id              	                              	AS StoreID,
+   	  ord_num              	                       	   	AS OrderNumber,
+   	  CONVERT(CHAR(12),ord_date,102)                   	   	AS OrderDate,
+   	  CONVERT(CHAR(12),DATEADD(DAY,10,ord_date),102)   	   	AS NewOrderDate
+FROM     sales
+WHERE    qty <=15
+ORDER BY stor_id
+
+--EX. 7.10
+SELECT emp_id                	                              	AS EmpID,
+   	 (lname + ' ' + fname)                             	   	AS Name,
+   	 DATEPART(YEAR,hire_date)                         	   	AS HireDate,
+   	 DATEDIFF(YEAR,Hire_date,'Jan 1 2008')             	   	AS Years
+FROM   employee
+ORDER BY NAME;
+
+
+
