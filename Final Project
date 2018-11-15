@@ -1,1 +1,120 @@
+--Part B
+--QUESTION 1:
+SELECT d.OrderID,
+       d.Quantity,
+       d.ProductID,
+       p.ReorderLevel,
+       s.SupplierID
+FROM   OrderDetails  d
+INNER JOIN	Products  	p  	ON
+       p.ProductID = d.ProductID
+INNER JOIN	Suppliers 	s  	ON
+       s.SupplierID = p.SupplierID
+WHERE  d.Quantity > 64        	AND
+       d.Quantity < 71
+ORDER BY OrderID;
+   	   	
+--QUESTION 2:
+SELECT ProductID,
+   	ProductName,
+   	EnglishName,
+   	UnitPrice
+FROM   Products
+WHERE  UnitPrice < 8
+ORDER BY ProductID;
+
+--QUESTION 3: 
+SELECT CustomerID,
+   	CompanyName,
+   	Country,
+   	Phone
+FROM   Customers
+WHERE  Country = 'USA'  	   	OR
+   	Country = 'Canada'
+ORDER BY CustomerID;
+
+--QUESTION 4:
+SELECT s.SupplierID,
+          	s.Name,
+          	p.ProductName,
+          	p.ReorderLevel,
+          	p.UnitsInStock
+FROM   Suppliers        	s
+INNER JOIN	Products  	p  	ON
+          	p.SupplierID = s.SupplierID
+WHERE  p.ReorderLevel = p.UnitsInStock
+ORDER BY SupplierID;
+
+--QUESTION 5:
+SELECT o.OrderID,
+          	c.CompanyName,
+          	c.ContactName,
+          	CONVERT(CHAR(12),o.ShippedDate,109)  	AS 	ShippedDate,
+          	DATEDIFF(YEAR,o.ShippedDate,'Jan 1 2009')	AS 	ElapsedYears
+FROM   Orders           	o
+INNER JOIN	Customers 	c                      	ON
+          	c.CustomerID = o.CustomerID
+WHERE  ShippedDate >= 'Jan 1 1994'
+ORDER BY o.OrderID,
+         ElapsedYears;
+
+--QUESTION 6:
+SELECT o.OrderID,
+   	p.ProductName,
+   	c.CompanyName,
+   	CONVERT(CHAR(12),o.OrderDate,102)                         	AS 	OrderDate,
+   	CONVERT(CHAR(12),DATEADD(DAY,10,o.ShippedDate),102)       	AS 	NewShippedDate,
+   	p.UnitPrice*d.Quantity               	                 	AS 	OrderCost
+FROM   OrderDetails  d
+INNER JOIN Products  p                                    	   	ON
+   	p.ProductID = d.ProductID
+INNER JOIN Orders	o                                    	   	ON
+   	o.OrderID = d.OrderID
+INNER JOIN Customers c                                    	   	ON
+   	c.CustomerID = o.CustomerID
+WHERE  OrderDate BETWEEN 'Jan 1 1992' AND 'Mar 30 1992'
+AND	(d.Quantity*p.UnitPrice)>= 1500
+ORDER BY OrderID;
+
+--QUESTION 7:
+SELECT o.OrderID,
+   	d.UnitPrice,
+   	d.Quantity
+FROM   Orders o
+INNER JOIN OrderDetails d  ON
+   	d.OrderID = o.OrderID
+WHERE  o.ShipCity = 'Vancouver'
+ORDER BY OrderID;
+ 
+--QUESTION 8:
+SELECT c.CustomerID,
+   	c.CompanyName,
+   	c.Fax,
+   	o.OrderID,
+   	o.OrderDate
+FROM   Customers 	c
+INNER JOIN Orders	o  	ON
+   	c.CustomerID = o.CustomerID
+WHERE  ShippedDate   IS NULL
+Order By CustomerID,
+   	  OrderDate;
+
+--QUESTION 9:
+SELECT ProductID,
+   	ProductName,
+   	QuantityPerUnit,
+   	UnitPrice
+FROM   Products
+WHERE  ProductName LIKE 	'%choc%' OR
+   	ProductName LIKE 	'%tofu%'
+ORDER BY ProductID;
+
+--QUESTION 10:
+SELECT SUBSTRING(ProductName, 1, 1),
+   	COUNT(*)
+FROM   Products
+GROUP BY SUBSTRING(ProductName, 1, 1)
+HAVING COUNT(*) > 3;
+
+
 
