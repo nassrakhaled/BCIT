@@ -116,5 +116,65 @@ FROM   Products
 GROUP BY SUBSTRING(ProductName, 1, 1)
 HAVING COUNT(*) > 3;
 
+--Part C:
+-- QUESTION 1:
+CREATE VIEW      	vw_supplier_items	AS
+SELECT DISTINCT  	s.SupplierID,
+                 	s.Name,
+                 	p.ProductID,
+                 	p.ProductName
+FROM             	Suppliers 	s
+INNER JOIN       	Products  	p  	ON
+                 	s.SupplierID = p.SupplierID;
+
+-- QUESTION 2:
+CREATE VIEW   vw_employee_info              	AS
+SELECT    	EmployeeID,
+          	(FirstName + ' ' + LastName)  	AS Name,
+          	Birthdate
+FROM      	Employees;
+
+-- QUESTION 3:
+UPDATE    	Customers
+SET	   	Fax	= 'Unkown'
+WHERE     	Fax IS NULL;
+
+-- QUESTION 4:
+CREATE VIEW   vw_order_cost                 	AS
+SELECT    	o.OrderID,
+          	o.OrderDate,
+          	p.ProductID,
+          	c.CompanyName,
+          	(d.Quantity*d.UnitPrice)      	AS 	OrderCost
+FROM      	Orders    	o
+INNER JOIN	OrderDetails  d                	ON
+              d.OrderID = o.OrderID
+INNER JOIN	Customers 	c  	   	   	ON
+              c.CustomerID = o.CustomerID
+INNER JOIN	Products  	p         	   	ON
+              p.ProductID = d.ProductID;
+
+-- QUESTION 5:
+INSERT INTO   Suppliers 	(SupplierID, Name)
+          	VALUES    	(16,'Supplier P');
+
+-- QUESTION 6:
+UPDATE    	Products
+SET       	UnitPrice = (UnitPrice*1.15)
+WHERE     	UnitPrice < 5;
+
+-- QUESTION 7:
+CREATE VIEW	vw_orders        	AS
+SELECT        o.OrderID,
+              c.CustomerID,
+              c.CompanyName,
+              c.City,
+              c.Country,
+              o.ShippedDate
+FROM          Customers 	c
+INNER JOIN    Orders    	o  	ON
+              o.CustomerID = c.CustomerID;
+
+
 
 
